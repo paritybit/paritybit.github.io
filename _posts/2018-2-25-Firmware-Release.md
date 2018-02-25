@@ -91,3 +91,4 @@ Your team may not accept work with a well-defined release procedure. But nothing
 After some time, your team will see the benefit and will accept to work this way. And if they don’t, maybe it’s time to find another job. After all, it's not just about being a developer, it's about being a great developer, so make sure you find a place where you can grow and get better every day. This is the reason why I started Firmware update - a blog about Embedded Systems Developing and C Programming. It's a place where I'm going to share my experience, ideas, and throughts I hope will help other developers to get better. 
 
 Being a good developer is not a status, it's a processos. And one should never stop learning along the way. Becouse of this your opinion is important. How do yuo release your embedded software? What do yuo think about these scripts? What would you like to change / improve? Feel free to share your thought in the comment section.
+ff

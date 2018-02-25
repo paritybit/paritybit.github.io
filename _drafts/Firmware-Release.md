@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Embedded software release procedure
+published: true
 ---
 
 One of my first job assignments as a Junior Embedded software developer was supporting a source code of a simple project. It was a pretty simple thing — a small board with an 8-bit processor, a couple of buttons, a couple of LEDs and solid state relay. LEDs were used to show the actual state of the board. There was an error condition where both LEDs were blinking quickly. 
@@ -84,6 +85,8 @@ Usually, when one finds a bug, it’s a good idea to fix it right away. But it�
 # My team will never accept it
 After the LED speed down episode, I talked to my manager. I explained what happened and suggested to implement some kind of release procedures to avoid this from re-occurring. “Nah, it’s a waste of time” was his response. “This customer is silly, if they don’t know how to use file explorer on their computer, it’s not our problem.”
 
-Your team may not accept work with a well-defined release procedure. But nothing prevents you — embedded software developer to do so on your code. Nobody can prevent you to keep a __BUILD constant in your code that automatically increases on each build. Nobody can prevent you to include this number into a hex file name. You always can keep a release notes file for your own reference. And there is nothing wrong with keeping track of your bugs — at lease on a Spreadsheet.
+Your team may not accept work with a well-defined release procedure. But nothing prevents you — embedded software developer to do so on your code. Nobody can prevent you to keep a `__BUILD` constant in your code that automatically increases on each build. Nobody can prevent you to include this number into a hex file name. You always can keep a release notes file for your own reference. And there is nothing wrong with keeping track of your bugs — at lease on a Spreadsheet.
 
-After some time, your team will see the benefit and will accept to work this way. And if they don’t, maybe it’s time to find another job.
+After some time, your team will see the benefit and will accept to work this way. And if they don’t, maybe it’s time to find another job. After all, it's not just about being a developer, it's about being a great developer, so make sure you find a place where you can grow and get better every day. This is the reason why I started Firmware update - a blog about Embedded Systems Developing and C Programming. It's a place where I'm going to share my experience, ideas, and throughts I hope will help other developers to get better. 
+
+Being a good developer is not a status, it's a processos. And one should never stop learning along the way. Becouse of this your opinion is important. How do yuo release your embedded software? What do yuo think about these scripts? What would you like to change / improve? Feel free to share your thought in the comment section.  

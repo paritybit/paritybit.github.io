@@ -48,7 +48,6 @@ Simple, right? Now, we need to configure Atmel Studio to run this script after e
 	"$(MSBuildProjectDirectory)\deploy\deploy.cmd" "$(MSBuildProjectDirectory)" $(Configuration) $(AssemblyName)
 
 ![firmware-release-atmel-studio-screenshot.png]({{site.baseurl}}/images/posts/firmware-release-atmel-studio-screenshot.png)
-![]({{site.baseurl}}/images/posts/firmware-release-atmel-studio-screenshot.png)
 Atmel Studio Build Events Configuration and “hex” folder
 
 ## Going one step further

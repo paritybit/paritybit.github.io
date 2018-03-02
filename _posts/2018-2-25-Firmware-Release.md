@@ -29,7 +29,18 @@ Since there is no solution out of the box on most IDEs, why not implement it? At
 
 Said this, a small, simple batch script is all we need to start figuring this out. Here is a script example for an Atmel Studio 7 project:
 
-	[script goes here]
+	setlocal enabledelayedexpansion
+	set local=%~1\..\hex
+	set conf=%2
+	set filename=%3
+	SET /p buildn=<"%~1\deploy\build.txt"
+	mkdir "%local%"
+	copy "%~1\%conf%\%filename%.hex" "%local%\%filename%___build.%buildn%.hex"
+	@echo ***********************************
+	@echo Created new version: Build %buildn%
+	@echo ***********************************
+	set /a buildn=%buildn% + 1
+	echo %buildn% > "%~1\deploy\build.txt"
 
 This simple script receives 3 input parameters:
 * Path to the project directory
@@ -53,7 +64,9 @@ Atmel Studio Build Events Configuration and “hex” folder
 ## Going one step further
 Once we have the script tested and working, the next step is to add the build number to our source code. It’s really easy to do; we just need another simple script.
 
-	[script goes here] 
+	setlocal enabledelayedexpansion
+	SET /p buildn=<"%~1\deploy\build.txt"
+	@echo #define __BUILD %buildn%> "%~1\src\build.h"
 
 This super simple script read the build number from the same txt file and creates the “build.h” file defining the build number there:
 
@@ -69,7 +82,20 @@ Now, all we need to do is to add “build.h” to our project and use `__BUILD` 
 These scripts are just simple examples. Each developer has his own preferences; each project is different, and each team has a unique workflow. If this script doesn't work well with your workflow/project/team, you can always adapt it to what you need.
 For example, maybe you don’t like the idea of creating tons of hex files on your disc. If so, you can edit the script only to make a copy on release builds:
 
-	[SCRIPT GOES HERE]
+	setlocal enabledelayedexpansion
+	set local=%~1\..\hex
+	set conf=%2
+	set filename=%3
+	SET /p buildn=<"%~1\deploy\build.txt"
+	IF "%conf%" == "Debug" (goto end)
+	mkdir "%local%"
+	copy "%~1\%conf%\%filename%.hex" "%local%\%filename%___build.%buildn%.hex"
+	:end
+	@echo ***********************************
+	@echo Created new version: Build %buildn%
+	@echo ***********************************
+	set /a buildn=%buildn% + 1
+	echo %buildn% > "%~1\deploy\build.txt"
 
 # Final notes
 Implementing a build script like this into your development process is just a beginning. There are other things and good practice you can implement to make release processes nice and smooth. 

@@ -9,6 +9,7 @@ One of my first job assignments as a Junior Embedded software developer was supp
 One day, a customer contacted me, saying he doesn’t like how the LEDs were blinking during an error condition. They were blinking “way too fast” and must be speed down. Ok, pretty simple. Half an hour later, I sent the customer an email with a new hex file attached. “This is still too fast, let's slow it down a little more.” Ok, another email with new firmware build. “Still too fast!” Ok, another email. Now, I changed the period to 1Hz — it’s really slow. “No, they are still blinking as fast as before, I ever can notice the difference.”
 
 Well, what’s going on here? I got the customer on the phone and finally found the issue. The problem was very simple: they were uploading a wrong file to the board. They were saving the attachment somewhere on the disc, then got the firmware update tool and selected an original, old firmware file delivered months ago! They were downloading the same firmware file repeatedly. This was why they saw the LED blink always at the same speed: it was the same firmware all the time. 
+![firmware-release.png]({{site.baseurl}}/images/posts/annoyed-cafe-coffee-52608.jpg)
 
 # Release matters
 I got a lecture from this simple experience. Being a software developer is much more than just writing code. Documentation matters. Bug tracking matters. And management of software release matters.
@@ -29,7 +30,18 @@ Since there is no solution out of the box on most IDEs, why not implement it? At
 
 Said this, a small, simple batch script is all we need to start figuring this out. Here is a script example for an Atmel Studio 7 project:
 
-	[script goes here]
+	setlocal enabledelayedexpansion
+	set local=%~1\..\hex
+	set conf=%2
+	set filename=%3
+	SET /p buildn=<"%~1\deploy\build.txt"
+	mkdir "%local%"
+	copy "%~1\%conf%\%filename%.hex" "%local%\%filename%___build.%buildn%.hex"
+	@echo ***********************************
+	@echo Created new version: Build %buildn%
+	@echo ***********************************
+	set /a buildn=%buildn% + 1
+	echo %buildn% > "%~1\deploy\build.txt"
 
 This simple script receives 3 input parameters:
 * Path to the project directory
@@ -47,12 +59,15 @@ Simple, right? Now, we need to configure Atmel Studio to run this script after e
 
 	"$(MSBuildProjectDirectory)\deploy\deploy.cmd" "$(MSBuildProjectDirectory)" $(Configuration) $(AssemblyName)
 
+![firmware-release-atmel-studio-screenshot.png]({{site.baseurl}}/images/posts/firmware-release-atmel-studio-screenshot.png)
 Atmel Studio Build Events Configuration and “hex” folder
 
 ## Going one step further
 Once we have the script tested and working, the next step is to add the build number to our source code. It’s really easy to do; we just need another simple script.
 
-	[script goes here] 
+	setlocal enabledelayedexpansion
+	SET /p buildn=<"%~1\deploy\build.txt"
+	@echo #define __BUILD %buildn%> "%~1\src\build.h"
 
 This super simple script read the build number from the same txt file and creates the “build.h” file defining the build number there:
 
@@ -68,7 +83,20 @@ Now, all we need to do is to add “build.h” to our project and use `__BUILD` 
 These scripts are just simple examples. Each developer has his own preferences; each project is different, and each team has a unique workflow. If this script doesn't work well with your workflow/project/team, you can always adapt it to what you need.
 For example, maybe you don’t like the idea of creating tons of hex files on your disc. If so, you can edit the script only to make a copy on release builds:
 
-	[SCRIPT GOES HERE]
+	setlocal enabledelayedexpansion
+	set local=%~1\..\hex
+	set conf=%2
+	set filename=%3
+	SET /p buildn=<"%~1\deploy\build.txt"
+	IF "%conf%" == "Debug" (goto end)
+	mkdir "%local%"
+	copy "%~1\%conf%\%filename%.hex" "%local%\%filename%___build.%buildn%.hex"
+	:end
+	@echo ***********************************
+	@echo Created new version: Build %buildn%
+	@echo ***********************************
+	set /a buildn=%buildn% + 1
+	echo %buildn% > "%~1\deploy\build.txt"
 
 # Final notes
 Implementing a build script like this into your development process is just a beginning. There are other things and good practice you can implement to make release processes nice and smooth. 
@@ -87,6 +115,7 @@ After the LED speed down episode, I talked to my manager. I explained what happe
 
 Your team may not accept work with a well-defined release procedure. But nothing prevents you — embedded software developer to do so on your code. Nobody can prevent you to keep a `__BUILD` constant in your code that automatically increases on each build. Nobody can prevent you to include this number into a hex file name. You always can keep a release notes file for your own reference. And there is nothing wrong with keeping track of your bugs — at lease on a Spreadsheet.
 
-After some time, your team will see the benefit and will accept to work this way. And if they don’t, maybe it’s time to find another job. After all, it's not just about being a developer, it's about being a great developer, so make sure you find a place where you can grow and get better every day. This is the reason why I started Firmware update - a blog about Embedded Systems Developing and C Programming. It's a place where I'm going to share my experience, ideas, and throughts I hope will help other developers to get better. 
+After some time, your team will see the benefit and will accept to work this way. And if they don’t, maybe it’s time to find another job. After all, it's not just about being a developer; it's about being a great developer, so make sure you find a place where you can grow and get better every day. This is the reason why I started Firmware update - a blog about Embedded Systems Developing and Programming. It's a place where I'm going to share my experience, ideas, and thoughts I hope will help other developers to get better. 
 
-Being a good developer is not a status, it's a processos. And one should never stop learning along the way. Becouse of this your opinion is important. How do yuo release your embedded software? What do yuo think about these scripts? What would you like to change / improve? Feel free to share your thought in the comment section.  
+Being a good developer is not a status, it's a process. And one should never stop learning along the way. Because of this, your opinion is important. How do you release your embedded software? What do you think about these scripts? What would you like to change/improve? Feel free to share your thought in the comment section. `CR` `LF`
+
